@@ -53,7 +53,7 @@ def get_filings_metadata(ticker, start_date, end_date):
 def get_cik_for_ticker(ticker):
     # Query SEC ticker to CIK mapping
     mapping_url = "https://www.sec.gov/files/company_tickers_exchange.json"
-    headers = {'User-Agent': 'YourName your.email@example.com'}
+    headers = {'User-Agent': 'LucasWafelbakker lucaswafelbakker@gmail.com'}
     resp = requests.get(mapping_url, headers=headers)
     if resp.status_code != 200:
         return None
