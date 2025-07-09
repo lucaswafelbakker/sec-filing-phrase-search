@@ -31,7 +31,7 @@ def get_filings_metadata(ticker, start_date, end_date):
         return []
 
     url = base_url.format(cik.zfill(10))
-    headers = {'User-Agent': 'YourName your.email@example.com'}
+    headers = {'User-Agent': 'LucasWafelbakker lucaswafelbakker@gmail.com'}
 
     resp = requests.get(url, headers=headers)
     if resp.status_code != 200:
