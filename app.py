@@ -7,7 +7,7 @@ import re
 import io
 
 # Constants
-PHRASE = "of accrued performance-based compensation"
+PHRASE = "accrued performance-based compensation"
 START_DATE = "2024-01-01"
 END_DATE = "2025-06-30"
 
@@ -31,7 +31,7 @@ def get_filings_metadata(ticker, start_date, end_date):
         return []
 
     url = base_url.format(cik.zfill(10))
-    headers = {'User-Agent': 'LucasWafelbakker lucaswafelbakker@gmail.com'}
+    headers = {'User-Agent': 'YourName your.email@example.com'}
 
     resp = requests.get(url, headers=headers)
     if resp.status_code != 200:
@@ -58,9 +58,23 @@ def get_cik_for_ticker(ticker):
     if resp.status_code != 200:
         return None
     data = resp.json()
-    for item in data.values():
-        if item['ticker'].upper() == ticker.upper():
-            return str(item['cik'])
+
+    # The SEC endpoint sometimes returns a list of company mappings and sometimes
+    # a dict whose values are the mappings (historical behaviour).  Support both
+    # shapes so the app keeps working if the SEC changes the response format.
+    if isinstance(data, dict):
+        items = data.values()
+    else:  # list or other iterable
+        items = data
+
+    for item in items:
+        # Guard against unexpected structures
+        try:
+            if item.get("ticker", "").upper() == ticker.upper():
+                return str(item.get("cik"))
+        except AttributeError:
+            # "item" isn't a mapping (dict-like), skip it
+            continue
     return None
 
 def download_filing_text(cik, accession):
