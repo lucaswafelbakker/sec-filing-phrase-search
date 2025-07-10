@@ -140,3 +140,4 @@ if st.button("Search filings for phrase"):
             st.write("---")
     else:
         st.write("No matches found.")
+
